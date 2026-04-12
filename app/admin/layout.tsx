@@ -31,6 +31,7 @@ export default async function AdminLayout({
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
             <span style={{ color: 'white', fontWeight: '600', fontSize: '15px' }}>CarShop Admin</span>
             <a href="/admin" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>Dashboard</a>
+            <a href="/admin/reports" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>Reports</a>
             <a href="/admin/clients" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>All Clients</a>
             <a href="/admin/staff" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>Staff</a>
           </div>
