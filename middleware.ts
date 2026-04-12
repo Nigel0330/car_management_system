@@ -22,11 +22,64 @@ export async function middleware(request: NextRequest) {
   )
 
   const { data: { user } } = await supabase.auth.getUser()
+  const pathname = request.nextUrl.pathname
 
-  // If not logged in and not already on login page, redirect to login
-  if (!user && !request.nextUrl.pathname.startsWith('/login')) {
+  // If not logged in, redirect to login
+  if (!user) {
+    if (pathname.startsWith('/login')) return supabaseResponse
     const url = request.nextUrl.clone()
     url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  // Get user role from users table
+  const { data: userData } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  const role = userData?.role
+
+  // Redirect logged in user away from login page
+  if (pathname.startsWith('/login')) {
+    const url = request.nextUrl.clone()
+    if (role === 'owner') url.pathname = '/admin'
+    else if (role === 'manager') url.pathname = '/manager'
+    else url.pathname = '/staff'
+    return NextResponse.redirect(url)
+  }
+
+  // Protect /admin routes — owner only
+  if (pathname.startsWith('/admin') && role !== 'owner') {
+    const url = request.nextUrl.clone()
+    if (role === 'manager') url.pathname = '/manager'
+    else url.pathname = '/staff'
+    return NextResponse.redirect(url)
+  }
+
+  // Protect /manager routes — manager only
+  if (pathname.startsWith('/manager') && role !== 'manager') {
+    const url = request.nextUrl.clone()
+    if (role === 'owner') url.pathname = '/admin'
+    else url.pathname = '/staff'
+    return NextResponse.redirect(url)
+  }
+
+  // Protect /staff routes — staff only
+  if (pathname.startsWith('/staff') && role !== 'staff') {
+    const url = request.nextUrl.clone()
+    if (role === 'owner') url.pathname = '/admin'
+    else url.pathname = '/manager'
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect root to correct dashboard
+  if (pathname === '/') {
+    const url = request.nextUrl.clone()
+    if (role === 'owner') url.pathname = '/admin'
+    else if (role === 'manager') url.pathname = '/manager'
+    else url.pathname = '/staff'
     return NextResponse.redirect(url)
   }
 
@@ -34,5 +87,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api).*)'],
 }

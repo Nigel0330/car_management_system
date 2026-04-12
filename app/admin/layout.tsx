@@ -9,7 +9,6 @@ export default async function AdminLayout({
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-
   if (!user) redirect('/login')
 
   const admin = createAdmin(
@@ -35,9 +34,12 @@ export default async function AdminLayout({
             <a href="/admin/clients" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>All Clients</a>
             <a href="/admin/staff" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>Staff</a>
           </div>
-          <a href="/dashboard" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>
-            ← Back to Dashboard
-          </a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <span style={{ color: '#93C5FD', fontSize: '12px' }}>{user.email}</span>
+            <a href="/auth/signout" style={{ color: 'white', fontSize: '12px', textDecoration: 'none', background: 'rgba(255,255,255,0.15)', padding: '5px 12px', borderRadius: '6px' }}>
+              Log out
+            </a>
+          </div>
         </div>
       </div>
       <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem' }}>
