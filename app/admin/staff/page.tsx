@@ -1,6 +1,8 @@
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import { createClient } from '../../../lib/supabase-server'
 import { redirect } from 'next/navigation'
+import CreateUserForm from './CreateUserForm'
+import DeleteUserButton from './DeleteUserButton'
 
 type User = {
   id: string
@@ -40,13 +42,11 @@ export default async function AdminStaffPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h1 style={{ margin: 0, color: '#1C3A5E', fontSize: '22px' }}>Staff Accounts</h1>
-          <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '13px' }}>
-            {staff?.length ?? 0} accounts registered
-          </p>
-        </div>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ margin: 0, color: '#1C3A5E', fontSize: '22px' }}>Staff & Manager Accounts</h1>
+        <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '13px' }}>
+          {staff?.length ?? 0} accounts registered
+        </p>
       </div>
 
       <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden', marginBottom: '1.5rem' }}>
@@ -57,6 +57,7 @@ export default async function AdminStaffPage() {
               <th style={{ padding: '12px 16px', textAlign: 'left', color: '#374151', fontWeight: '500' }}>Role</th>
               <th style={{ padding: '12px 16px', textAlign: 'left', color: '#374151', fontWeight: '500' }}>Branch</th>
               <th style={{ padding: '12px 16px', textAlign: 'left', color: '#374151', fontWeight: '500' }}>Date Added</th>
+              <th style={{ padding: '12px 16px', textAlign: 'left', color: '#374151', fontWeight: '500' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -65,8 +66,8 @@ export default async function AdminStaffPage() {
                 <td style={{ padding: '12px 16px', color: '#111827', fontWeight: '500' }}>{s.email}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <span style={{
-                    background: s.role === 'owner' ? '#FEF3C7' : '#EFF6FF',
-                    color: s.role === 'owner' ? '#92400E' : '#1C3A5E',
+                    background: s.role === 'owner' ? '#FEF3C7' : s.role === 'manager' ? '#E6F1FB' : '#EFF6FF',
+                    color: s.role === 'owner' ? '#92400E' : s.role === 'manager' ? '#0C447C' : '#1C3A5E',
                     padding: '2px 10px', borderRadius: '99px', fontSize: '12px', fontWeight: '500'
                   }}>
                     {s.role.toUpperCase()}
@@ -78,21 +79,18 @@ export default async function AdminStaffPage() {
                 <td style={{ padding: '12px 16px', color: '#6b7280' }}>
                   {new Date(s.created_at).toLocaleDateString('en-PH')}
                 </td>
+                <td style={{ padding: '12px 16px' }}>
+                  {s.role !== 'owner' && (
+                    <DeleteUserButton userId={s.id} userEmail={s.email} />
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div style={{ background: '#EFF6FF', borderRadius: '12px', padding: '1.25rem', border: '1px solid #BFDBFE' }}>
-        <h2 style={{ margin: '0 0 4px', color: '#1C3A5E', fontSize: '14px' }}>To add a new staff account</h2>
-        <p style={{ margin: 0, color: '#1C3A5E', fontSize: '13px' }}>
-          Go to your Supabase dashboard → Authentication → Users → Add user. Then run this SQL to assign them a role and branch:
-        </p>
-        <div style={{ background: 'white', borderRadius: '8px', padding: '10px 14px', marginTop: '10px', fontFamily: 'monospace', fontSize: '12px', color: '#1C3A5E' }}>
-          INSERT INTO users (id, email, role, branch_id) VALUES (&apos;AUTH_USER_ID&apos;, &apos;staff@email.com&apos;, &apos;staff&apos;, &apos;BRANCH_ID&apos;);
-        </div>
-      </div>
+      <CreateUserForm />
     </div>
   )
 }
