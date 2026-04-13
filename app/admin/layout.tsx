@@ -32,12 +32,13 @@ export default async function AdminLayout({
             <span style={{ color: 'white', fontWeight: '600', fontSize: '15px' }}>CarShop Admin</span>
             <a href="/admin" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>Dashboard</a>
             <a href="/admin/reports" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>Reports</a>
+            <a href="/admin/activity" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>Activity</a>
             <a href="/admin/clients" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>All Clients</a>
             <a href="/admin/staff" style={{ color: '#93C5FD', fontSize: '13px', textDecoration: 'none' }}>Staff</a>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <span style={{ color: '#93C5FD', fontSize: '12px' }}>{user.email}</span>
-            <a href="/auth/signout" style={{ color: 'white', fontSize: '12px', textDecoration: 'none', background: 'rgba(255,255,255,0.15)', padding: '5px 12px', borderRadius: '6px' }}>
+            <a href="/auth/logout" style={{ color: 'white', fontSize: '12px', textDecoration: 'none', background: 'rgba(255,255,255,0.15)', padding: '5px 12px', borderRadius: '6px' }}>
               Log out
             </a>
           </div>

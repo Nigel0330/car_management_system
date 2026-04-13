@@ -36,6 +36,17 @@ export default function StaffEditClientPage() {
       .update(form)
       .eq('id', clientId)
     if (err) { setError(err.message); setLoading(false); return }
+
+    await fetch('/api/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'edited',
+        entity_type: 'client',
+        entity_name: form.full_name
+      })
+    })
+
     router.push('/staff/clients')
   }
 
