@@ -103,15 +103,15 @@ export default function StaffNewClientPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Full Name <span style={{ color: '#dc2626' }}>*</span></label>
-              <input value={form.full_name} onChange={e => setForm(p => ({ ...p, full_name: e.target.value }))} placeholder="e.g. Juan dela Cruz" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }} />
+              <input value={form.full_name} onChange={e => setForm(p => ({ ...p, full_name: e.target.value }))} placeholder="e.g. Juan dela Cruz" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Phone</label>
-              <input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} placeholder="e.g. 09123456789" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }} />
+              <input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} placeholder="e.g. 09123456789" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Address</label>
-              <input value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} placeholder="e.g. 123 Main St, Quezon City" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }} />
+              <input value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} placeholder="e.g. 123 Main St, Quezon City" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }} />
             </div>
           </div>
         </div>
@@ -121,11 +121,11 @@ export default function StaffNewClientPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Car Model <span style={{ color: '#dc2626' }}>*</span></label>
-              <input value={form.car_model} onChange={e => setForm(p => ({ ...p, car_model: e.target.value }))} placeholder="e.g. Toyota Vios" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }} />
+              <input value={form.car_model} onChange={e => setForm(p => ({ ...p, car_model: e.target.value }))} placeholder="e.g. Toyota Vios" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Plate Number <span style={{ color: '#dc2626' }}>*</span></label>
-              <input value={form.plate_number} onChange={e => setForm(p => ({ ...p, plate_number: e.target.value }))} placeholder="e.g. ABC 1234" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }} />
+              <input value={form.plate_number} onChange={e => setForm(p => ({ ...p, plate_number: e.target.value }))} placeholder="e.g. ABC 1234" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }} />
             </div>
           </div>
         </div>
@@ -135,14 +135,14 @@ export default function StaffNewClientPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Type of Service <span style={{ color: '#dc2626' }}>*</span></label>
-              <select value={form.service_type} onChange={e => setForm(p => ({ ...p, service_type: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }}>
+              <select value={form.service_type} onChange={e => setForm(p => ({ ...p, service_type: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}>
                 <option value="">Select service type</option>
                 {SERVICE_TYPES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Service Reminder Interval</label>
-              <select value={form.reminder_months} onChange={e => setForm(p => ({ ...p, reminder_months: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }}>
+              <select value={form.reminder_months} onChange={e => setForm(p => ({ ...p, reminder_months: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}>
                 <option value="1">Every 1 month</option>
                 <option value="2">Every 2 months</option>
                 <option value="3">Every 3 months</option>

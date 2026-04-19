@@ -18,7 +18,7 @@ const SERVICE_TYPES = [
   'General Inspection',
 ]
 
-export default function ManagerNewClientPage() {
+export default function AdminNewClientPage() {
   const router = useRouter()
   const [form, setForm] = useState({
     full_name: '',
@@ -90,7 +90,7 @@ export default function ManagerNewClientPage() {
       body: JSON.stringify({ action: 'created', entity_type: 'client', entity_name: form.full_name })
     })
 
-    router.push('/manager/clients')
+    router.push('/admin/clients')
   }
 
   return (

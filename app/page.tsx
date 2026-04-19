@@ -16,7 +16,7 @@ export default async function Home() {
 
   return (
     <main style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1 style={{ color: '#1C3A5E' }}>CarShop Dashboard</h1>
+      <h1 style={{ color: '#1C3A5E' }}>Wash Autority Dashboard</h1>
       <p style={{ color: '#6b7280' }}>Welcome! You are logged in as: {user.email}</p>
       <h2 style={{ marginTop: '1.5rem', color: '#1C3A5E' }}>Branches</h2>
       <ul>

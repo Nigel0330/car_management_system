@@ -90,14 +90,14 @@ export default function ManagerReportsPage() {
     const link = document.createElement('a')
     const month = new Date(startDate).toLocaleString('en-PH', { month: 'long', year: 'numeric' })
     link.href = url
-    link.download = `CarShop_Report_${month.replace(' ', '_')}.csv`
+    link.download = `Wash Autority_Report_${month.replace(' ', '_')}.csv`
     link.click()
     URL.revokeObjectURL(url)
     setLoading(false)
   }
 
   return (
-    <div style={{ maxWidth: '500px' }}>
+    <div style={{ maxWidth: '500px', margin: '0 auto' }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{ margin: 0, color: '#1C3A5E', fontSize: '22px' }}>Generate Report</h1>
         <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '13px' }}>Download a CSV report for a selected date range</p>
@@ -112,7 +112,7 @@ export default function ManagerReportsPage() {
             type="date"
             value={startDate}
             onChange={e => setStartDate(e.target.value)}
-            style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}
           />
         </div>
         <div>
@@ -123,7 +123,7 @@ export default function ManagerReportsPage() {
             type="date"
             value={endDate}
             onChange={e => setEndDate(e.target.value)}
-            style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}
           />
         </div>
 

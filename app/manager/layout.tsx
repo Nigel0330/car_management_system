@@ -11,7 +11,7 @@ export default async function ManagerLayout({ children }: { children: React.Reac
       <aside style={{ width: '220px', background: '#1C3A5E', color: 'white', padding: '1.5rem 1rem', flexShrink: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         <div>
           <div style={{ marginBottom: '2rem' }}>
-            <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>CarShop</h2>
+            <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>Wash Autority</h2>
             <p style={{ margin: '4px 0 0', fontSize: '11px', opacity: 0.6 }}>Manager Panel</p>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>

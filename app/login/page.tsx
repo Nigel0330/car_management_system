@@ -41,7 +41,7 @@ export default function LoginPage() {
         borderRadius: '12px', border: '1px solid #e5e7eb',
         width: '100%', maxWidth: '380px'
       }}>
-        <h1 style={{ color: '#1C3A5E', marginBottom: '0.25rem' }}>CarShop</h1>
+        <h1 style={{ color: '#1C3A5E', marginBottom: '0.25rem' }}>Wash Autority</h1>
         <p style={{ color: '#6b7280', marginBottom: '1.5rem', fontSize: '14px' }}>
           Sign in to your account
         </p>

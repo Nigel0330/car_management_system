@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { createClient } from '../../../../lib/supabase'
+import { createClient } from '../../../../../lib/supabase'
 import { useRouter, useParams } from 'next/navigation'
 
 const supabase = createClient()
@@ -61,7 +61,7 @@ export default function StaffEditClientPage() {
           <input
             value={form.full_name}
             onChange={e => setForm(p => ({ ...p, full_name: e.target.value }))}
-            style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}
           />
         </div>
         <div>
@@ -69,7 +69,7 @@ export default function StaffEditClientPage() {
           <input
             value={form.phone}
             onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
-            style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}
           />
         </div>
         <div>
@@ -77,7 +77,7 @@ export default function StaffEditClientPage() {
           <input
             value={form.address}
             onChange={e => setForm(p => ({ ...p, address: e.target.value }))}
-            style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}
           />
         </div>
         {error && <p style={{ color: '#dc2626', fontSize: '13px', margin: 0 }}>{error}</p>}

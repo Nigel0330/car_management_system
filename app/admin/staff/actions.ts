@@ -7,6 +7,7 @@ export async function createUser(formData: FormData) {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
   const role = formData.get('role') as string
+  const branch_id = formData.get('branch_id') as string
 
   const admin = createAdmin(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -26,7 +27,8 @@ export async function createUser(formData: FormData) {
   const { error: dbError } = await admin.from('users').insert({
     id: authUser.user.id,
     email,
-    role
+    role,
+    branch_id
   })
 
   if (dbError) {
