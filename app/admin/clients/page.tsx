@@ -110,7 +110,7 @@ export default async function AdminClientsPage({
                   {new Date(client.created_at).toLocaleDateString('en-PH')}
                 </td>
                 <td style={{ padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center' }}>
-                  <a href={`/dashboard/clients/${client.id}`} style={{ color: '#1C3A5E', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>
+                  <a href={`/dashboard/clients/${client.id}?back=/admin/clients`} style={{ color: '#1C3A5E', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>
                     View
                   </a>
                   <DeleteClientButton clientId={client.id} clientName={client.full_name} />

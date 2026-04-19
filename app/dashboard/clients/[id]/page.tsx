@@ -32,8 +32,18 @@ type Client = {
   created_at: string
 }
 
-export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ClientDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ back?: string }>
+}) {
   const { id } = await params
+  const { back } = await searchParams
+
+  const backUrl = back ?? '/dashboard/clients'
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -71,7 +81,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <Link href="/dashboard/clients" style={{ color: '#6b7280', fontSize: '13px', textDecoration: 'none' }}>
+          <Link href={backUrl} style={{ color: '#6b7280', fontSize: '13px', textDecoration: 'none' }}>
             ← Back to Clients
           </Link>
           <Link href={`/dashboard/clients/${id}/service/new`} style={{ padding: '8px 16px', borderRadius: '8px', background: '#1C3A5E', color: 'white', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>
