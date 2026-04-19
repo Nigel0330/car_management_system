@@ -65,6 +65,14 @@ export default function AdminActivityPage() {
     return map[r] ?? { bg: '#f3f4f6', color: '#374151' }
   }
 
+  const selectStyle = {
+    padding: '6px 10px',
+    border: '1px solid #e5e7eb',
+    borderRadius: '8px',
+    fontSize: '13px',
+    color: '#111827',
+  }
+
   return (
     <div>
       <div style={{ marginBottom: '1.5rem' }}>
@@ -77,7 +85,7 @@ export default function AdminActivityPage() {
       <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', padding: '1rem', marginBottom: '1.5rem', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
         <div>
           <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>Role</label>
-          <select value={role} onChange={e => setRole(e.target.value)} style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px' }}>
+          <select value={role} onChange={e => setRole(e.target.value)} style={selectStyle}>
             <option value="">All Roles</option>
             <option value="owner">Owner</option>
             <option value="manager">Manager</option>
@@ -86,7 +94,7 @@ export default function AdminActivityPage() {
         </div>
         <div>
           <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>Action</label>
-          <select value={action} onChange={e => setAction(e.target.value)} style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px' }}>
+          <select value={action} onChange={e => setAction(e.target.value)} style={selectStyle}>
             <option value="">All Actions</option>
             <option value="created">Created</option>
             <option value="edited">Edited</option>
@@ -101,7 +109,7 @@ export default function AdminActivityPage() {
             type="date"
             value={date}
             onChange={e => setDate(e.target.value)}
-            style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px' }}
+            style={{ ...selectStyle }}
           />
         </div>
         <button

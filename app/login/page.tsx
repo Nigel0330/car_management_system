@@ -41,7 +41,7 @@ export default function LoginPage() {
         borderRadius: '12px', border: '1px solid #e5e7eb',
         width: '100%', maxWidth: '380px'
       }}>
-        <h1 style={{ color: '#1C3A5E', marginBottom: '0.25rem' }}>Wash Autority</h1>
+        <h1 style={{ color: '#1C3A5E', marginBottom: '0.25rem' }}>Wash Authority</h1>
         <p style={{ color: '#6b7280', marginBottom: '1.5rem', fontSize: '14px' }}>
           Sign in to your account
         </p>
@@ -55,7 +55,8 @@ export default function LoginPage() {
               type="email" value={email} required
               onChange={e => setEmail(e.target.value)}
               style={{ width: '100%', padding: '8px 12px', borderRadius: '8px',
-                border: '1px solid #d1d5db', fontSize: '14px', boxSizing: 'border-box' }}
+                border: '1px solid #d1d5db', fontSize: '14px', boxSizing: 'border-box',
+                color: '#111827' }}
             />
           </div>
 
@@ -67,7 +68,8 @@ export default function LoginPage() {
               type="password" value={password} required
               onChange={e => setPassword(e.target.value)}
               style={{ width: '100%', padding: '8px 12px', borderRadius: '8px',
-                border: '1px solid #d1d5db', fontSize: '14px', boxSizing: 'border-box' }}
+                border: '1px solid #d1d5db', fontSize: '14px', boxSizing: 'border-box',
+                color: '#111827' }}
             />
           </div>
 

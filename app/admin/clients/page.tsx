@@ -2,7 +2,7 @@ import { createClient as createAdmin } from '@supabase/supabase-js'
 import { createClient } from '../../../lib/supabase-server'
 import { redirect } from 'next/navigation'
 import DeleteClientButton from './DeleteClientButton'
-import SearchClients from './SearchClients'
+import SearchClients from '../../../components/SearchClients'
 
 type Client = {
   id: string
