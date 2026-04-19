@@ -159,7 +159,7 @@ export default function StaffNewClientPage() {
           <button onClick={handleSubmit} disabled={loading} style={{ padding: '8px 20px', background: '#1C3A5E', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}>
             {loading ? 'Saving...' : 'Save Client'}
           </button>
-          <button onClick={() => router.back()} style={{ padding: '8px 20px', background: 'white', color: '#374151', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}>
+          <button onClick={() => router.push('/staff/clients')} style={{ padding: '8px 20px', background: 'white', color: '#374151', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}>
             Cancel
           </button>
         </div>

@@ -30,6 +30,7 @@ export default function ManagerEditClientPage() {
     car_model: '',
     plate_number: '',
     service_type: '',
+    reminder_months: '3',
   })
   const [vehicleId, setVehicleId] = useState('')
   const [serviceId, setServiceId] = useState('')
@@ -75,7 +76,11 @@ export default function ManagerEditClientPage() {
       }
       if (service) {
         setServiceId(service.id)
-        setForm(p => ({ ...p, service_type: service.service_type ?? '' }))
+        setForm(p => ({
+          ...p,
+          service_type: service.service_type ?? '',
+          reminder_months: service.reminder_months?.toString() ?? '3',
+        }))
       }
       setFetching(false)
     }
@@ -101,9 +106,16 @@ export default function ManagerEditClientPage() {
     }
 
     if (serviceId) {
+      const nextServiceDate = new Date()
+      nextServiceDate.setMonth(nextServiceDate.getMonth() + parseInt(form.reminder_months))
+
       await supabase
         .from('services')
-        .update({ service_type: form.service_type })
+        .update({
+          service_type: form.service_type,
+          reminder_months: parseInt(form.reminder_months),
+          next_service_date: nextServiceDate.toISOString().split('T')[0],
+        })
         .eq('id', serviceId)
     }
 
@@ -157,12 +169,24 @@ export default function ManagerEditClientPage() {
 
         <div>
           <p style={{ margin: '0 0 12px', fontSize: '13px', fontWeight: '500', color: '#1C3A5E' }}>Service Information</p>
-          <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Type of Service</label>
-            <select value={form.service_type} onChange={e => setForm(p => ({ ...p, service_type: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}>
-              <option value="">Select service type</option>
-              {SERVICE_TYPES.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Type of Service</label>
+              <select value={form.service_type} onChange={e => setForm(p => ({ ...p, service_type: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}>
+                <option value="">Select service type</option>
+                {SERVICE_TYPES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Service Reminder Interval</label>
+              <select value={form.reminder_months} onChange={e => setForm(p => ({ ...p, reminder_months: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}>
+                <option value="1">Every 1 month</option>
+                <option value="2">Every 2 months</option>
+                <option value="3">Every 3 months</option>
+                <option value="6">Every 6 months</option>
+                <option value="12">Every 12 months</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -172,7 +196,7 @@ export default function ManagerEditClientPage() {
           <button onClick={handleSubmit} disabled={loading} style={{ padding: '8px 20px', background: '#1C3A5E', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}>
             {loading ? 'Saving...' : 'Save Changes'}
           </button>
-          <button onClick={() => router.back()} style={{ padding: '8px 20px', background: 'white', color: '#374151', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}>
+          <button onClick={() => router.push('/manager/clients')} style={{ padding: '8px 20px', background: 'white', color: '#374151', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}>
             Cancel
           </button>
         </div>
