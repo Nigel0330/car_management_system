@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 type VehicleWithClient = {
   plate_number: string
   car_model: string
-  clients: { full_name: string; phone: string } | null
+  clients: { full_name: string; phone: string; email: string | null } | null
 } | null
 
 export async function GET() {
@@ -30,7 +30,8 @@ export async function GET() {
         car_model,
         clients (
           full_name,
-          phone
+          phone,
+          email
         )
       )
     `)
@@ -46,10 +47,10 @@ export async function GET() {
   }
 
   let sentCount = 0
-  const results: { client: string; vehicle: string; status: string }[] = []
+  let skippedCount = 0
+  const results: { client: string; vehicle: string; status: string; reason?: string }[] = []
 
   for (const svc of dueServices) {
-    // ✅ Double cast to bypass Supabase's generated array types
     const vehicle = (svc.vehicles as unknown) as VehicleWithClient
 
     if (!vehicle) continue
@@ -57,15 +58,29 @@ export async function GET() {
     const client = vehicle.clients
     if (!client) continue
 
+    // Use client's actual email; fall back to TEST_EMAIL in development
+    const recipientEmail = client.email ?? process.env.TEST_EMAIL
+
+    if (!recipientEmail) {
+      skippedCount++
+      results.push({
+        client: client.full_name,
+        vehicle: vehicle.plate_number,
+        status: 'skipped',
+        reason: 'No email address on file'
+      })
+      continue
+    }
+
     try {
       await resend.emails.send({
-        from: 'Wash Autority <onboarding@resend.dev>',
-        to: [process.env.TEST_EMAIL ?? 'nigelhernandez0330@gmail.com'],
+        from: 'Wash Authority <onboarding@resend.dev>',
+        to: [recipientEmail],
         subject: `Service Reminder — ${vehicle.car_model} (${vehicle.plate_number})`,
         html: `
           <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 24px;">
             <div style="background: #1C3A5E; color: white; padding: 20px; border-radius: 10px 10px 0 0;">
-              <h2 style="margin: 0; font-size: 20px;">Wash Autority Service Reminder</h2>
+              <h2 style="margin: 0; font-size: 20px;">Wash Authority Service Reminder</h2>
             </div>
             <div style="background: #f8fafc; padding: 20px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
               <p style="margin: 0 0 12px; font-size: 15px;">Hi <strong>${client.full_name}</strong>,</p>
@@ -74,10 +89,10 @@ export async function GET() {
                 <p style="margin: 0 0 6px;"><strong>Vehicle:</strong> ${vehicle.car_model}</p>
                 <p style="margin: 0 0 6px;"><strong>Plate:</strong> ${vehicle.plate_number}</p>
                 <p style="margin: 0 0 6px;"><strong>Service:</strong> ${svc.service_type}</p>
-                <p style="margin: 0;"><strong>Due date:</strong> ${svc.next_service_date}</p>
+                <p style="margin: 0;"><strong>Due date:</strong> ${new Date(svc.next_service_date).toLocaleDateString('en-PH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
               </div>
-              <p style="margin: 0 0 12px; color: #374151;">Please visit us at your earliest convenience.</p>
-              <p style="margin: 0; color: #6b7280; font-size: 13px;">— Wash Autority Team</p>
+              <p style="margin: 0 0 12px; color: #374151;">Please visit us at your earliest convenience to keep your vehicle in top condition.</p>
+              <p style="margin: 0; color: #6b7280; font-size: 13px;">— Wash Authority Team</p>
             </div>
           </div>
         `
@@ -108,6 +123,7 @@ export async function GET() {
   return NextResponse.json({
     message: 'Reminders processed.',
     sent: sentCount,
+    skipped: skippedCount,
     total: dueServices.length,
     results
   })

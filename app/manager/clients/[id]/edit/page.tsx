@@ -25,6 +25,7 @@ export default function ManagerEditClientPage() {
 
   const [form, setForm] = useState({
     full_name: '',
+    email: '',
     phone: '',
     address: '',
     car_model: '',
@@ -62,6 +63,7 @@ export default function ManagerEditClientPage() {
         setForm(p => ({
           ...p,
           full_name: client.full_name ?? '',
+          email: client.email ?? '',
           phone: client.phone ?? '',
           address: client.address ?? '',
         }))
@@ -93,7 +95,12 @@ export default function ManagerEditClientPage() {
 
     const { error: clientErr } = await supabase
       .from('clients')
-      .update({ full_name: form.full_name, phone: form.phone, address: form.address })
+      .update({
+        full_name: form.full_name,
+        email: form.email || null,
+        phone: form.phone,
+        address: form.address
+      })
       .eq('id', clientId)
 
     if (clientErr) { setError(clientErr.message); setLoading(false); return }
@@ -141,6 +148,19 @@ export default function ManagerEditClientPage() {
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Full Name</label>
               <input value={form.full_name} onChange={e => setForm(p => ({ ...p, full_name: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>
+                Email Address
+                <span style={{ marginLeft: '6px', fontSize: '11px', color: '#6b7280', fontWeight: '400' }}>— used for service reminders</span>
+              </label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
+                placeholder="e.g. juan@email.com"
+                style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}
+              />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Phone Number</label>
