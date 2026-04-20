@@ -68,11 +68,16 @@ export default async function AdminClientsPage({
 
   return (
     <div>
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ margin: 0, color: '#1C3A5E', fontSize: '22px' }}>All Clients</h1>
-        <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '13px' }}>
-          {clients.length} {plate ? `result${clients.length !== 1 ? 's' : ''} for "${plate}"` : 'total clients across all branches'}
-        </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+        <div>
+          <h1 style={{ margin: 0, color: '#1C3A5E', fontSize: '22px' }}>All Clients</h1>
+          <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '13px' }}>
+            {clients.length} {plate ? `result${clients.length !== 1 ? 's' : ''} for "${plate}"` : 'total clients across all branches'}
+          </p>
+        </div>
+        <a href="/admin/clients/new" style={{ padding: '8px 16px', background: '#1C3A5E', color: 'white', borderRadius: '8px', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>
+          + Add Client
+        </a>
       </div>
 
       <div style={{ marginBottom: '1rem' }}>

@@ -27,13 +27,16 @@ export default function AdminNewClientPage() {
     car_model: '',
     plate_number: '',
     service_type: '',
-    reminder_months: '3',
+    next_service_date: '',
+    branch_id: '',
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  const today = new Date().toISOString().split('T')[0]
+
   const handleSubmit = async () => {
-    if (!form.full_name || !form.plate_number || !form.car_model || !form.service_type) {
+    if (!form.full_name || !form.plate_number || !form.car_model || !form.service_type || !form.next_service_date || !form.branch_id) {
       setError('Please fill in all required fields.')
       return
     }
@@ -42,12 +45,6 @@ export default function AdminNewClientPage() {
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    const { data: userData } = await supabase
-      .from('users')
-      .select('branch_id')
-      .eq('id', user?.id)
-      .single()
-
     const { data: client, error: clientErr } = await supabase
       .from('clients')
       .insert({
@@ -55,7 +52,7 @@ export default function AdminNewClientPage() {
         phone: form.phone,
         address: form.address,
         created_by: user?.id,
-        branch_id: userData?.branch_id
+        branch_id: form.branch_id,
       })
       .select()
       .single()
@@ -70,16 +67,13 @@ export default function AdminNewClientPage() {
 
     if (vehicleErr || !vehicle) { setError(vehicleErr?.message ?? 'Failed to create vehicle'); setLoading(false); return }
 
-    const nextServiceDate = new Date()
-    nextServiceDate.setMonth(nextServiceDate.getMonth() + parseInt(form.reminder_months))
-
     const { error: serviceErr } = await supabase
       .from('services')
       .insert({
         vehicle_id: vehicle.id,
         service_type: form.service_type,
-        next_service_date: nextServiceDate.toISOString().split('T')[0],
-        reminder_sent: false
+        next_service_date: form.next_service_date,
+        reminder_sent: false,
       })
 
     if (serviceErr) { setError(serviceErr.message); setLoading(false); return }
@@ -113,6 +107,14 @@ export default function AdminNewClientPage() {
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Address</label>
               <input value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} placeholder="e.g. 123 Main St, Quezon City" style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }} />
             </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Branch <span style={{ color: '#dc2626' }}>*</span></label>
+              <select value={form.branch_id} onChange={e => setForm(p => ({ ...p, branch_id: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}>
+                <option value="">Select branch</option>
+                <option value="0296e847-80fb-488d-a5bc-40ae32e67f14">Branch 1</option>
+                <option value="cc49b6ff-fd74-4855-9b54-bda3c5d41b05">Branch 2</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -141,14 +143,21 @@ export default function AdminNewClientPage() {
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Service Reminder Interval</label>
-              <select value={form.reminder_months} onChange={e => setForm(p => ({ ...p, reminder_months: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}>
-                <option value="1">Every 1 month</option>
-                <option value="2">Every 2 months</option>
-                <option value="3">Every 3 months</option>
-                <option value="6">Every 6 months</option>
-                <option value="12">Every 12 months</option>
-              </select>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>
+                Next Service Date <span style={{ color: '#dc2626' }}>*</span>
+              </label>
+              <input
+                type="date"
+                value={form.next_service_date}
+                min={today}
+                onChange={e => setForm(p => ({ ...p, next_service_date: e.target.value }))}
+                style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}
+              />
+              {form.next_service_date && (
+                <p style={{ margin: '6px 0 0', fontSize: '12px', color: '#059669' }}>
+                  📅 Next service scheduled for {new Date(form.next_service_date).toLocaleDateString('en-PH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -159,7 +168,7 @@ export default function AdminNewClientPage() {
           <button onClick={handleSubmit} disabled={loading} style={{ padding: '8px 20px', background: '#1C3A5E', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}>
             {loading ? 'Saving...' : 'Save Client'}
           </button>
-          <button onClick={() => router.back()} style={{ padding: '8px 20px', background: 'white', color: '#374151', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}>
+          <button onClick={() => router.push('/admin/clients')} style={{ padding: '8px 20px', background: 'white', color: '#374151', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}>
             Cancel
           </button>
         </div>

@@ -27,13 +27,15 @@ export default function StaffNewClientPage() {
     car_model: '',
     plate_number: '',
     service_type: '',
-    reminder_months: '3',
+    next_service_date: '',
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  const today = new Date().toISOString().split('T')[0]
+
   const handleSubmit = async () => {
-    if (!form.full_name || !form.plate_number || !form.car_model || !form.service_type) {
+    if (!form.full_name || !form.plate_number || !form.car_model || !form.service_type || !form.next_service_date) {
       setError('Please fill in all required fields.')
       return
     }
@@ -70,15 +72,12 @@ export default function StaffNewClientPage() {
 
     if (vehicleErr || !vehicle) { setError(vehicleErr?.message ?? 'Failed to create vehicle'); setLoading(false); return }
 
-    const nextServiceDate = new Date()
-    nextServiceDate.setMonth(nextServiceDate.getMonth() + parseInt(form.reminder_months))
-
     const { error: serviceErr } = await supabase
       .from('services')
       .insert({
         vehicle_id: vehicle.id,
         service_type: form.service_type,
-        next_service_date: nextServiceDate.toISOString().split('T')[0],
+        next_service_date: form.next_service_date,
         reminder_sent: false
       })
 
@@ -141,14 +140,21 @@ export default function StaffNewClientPage() {
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Service Reminder Interval</label>
-              <select value={form.reminder_months} onChange={e => setForm(p => ({ ...p, reminder_months: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}>
-                <option value="1">Every 1 month</option>
-                <option value="2">Every 2 months</option>
-                <option value="3">Every 3 months</option>
-                <option value="6">Every 6 months</option>
-                <option value="12">Every 12 months</option>
-              </select>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>
+                Next Service Date <span style={{ color: '#dc2626' }}>*</span>
+              </label>
+              <input
+                type="date"
+                value={form.next_service_date}
+                min={today}
+                onChange={e => setForm(p => ({ ...p, next_service_date: e.target.value }))}
+                style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', color: '#111827' }}
+              />
+              {form.next_service_date && (
+                <p style={{ margin: '6px 0 0', fontSize: '12px', color: '#059669' }}>
+                  📅 Next service scheduled for {new Date(form.next_service_date).toLocaleDateString('en-PH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -22,10 +22,10 @@ type RawServiceVehicle = {
   vehicles: { client_id: string } | null
 }
 
-function getClientBadge(count: number): { label: string; bg: string; color: string } {
-  if (count >= 5) return { label: '⭐ Loyal', bg: '#FEF3C7', color: '#92400E' }
-  if (count >= 2) return { label: '🔄 Regular', bg: '#DBEAFE', color: '#1E40AF' }
-  return { label: '🆕 New', bg: '#DCFCE7', color: '#166534' }
+function getClientBadge(count: number): { label: string; bg: string; color: string; isNew: boolean } {
+  if (count >= 5) return { label: '⭐ Loyal', bg: '#FEF3C7', color: '#92400E', isNew: false }
+  if (count >= 2) return { label: '🔄 Regular', bg: '#DBEAFE', color: '#1E40AF', isNew: false }
+  return { label: '🆕 New', bg: '#DCFCE7', color: '#166534', isNew: true }
 }
 
 export default async function StaffDashboard() {
@@ -64,7 +64,6 @@ export default async function StaffDashboard() {
   const dueServices = (rawDueServices ?? []) as unknown as DueService[]
   const allServices = (rawAllServices ?? []) as unknown as RawServiceVehicle[]
 
-  // Count services per client
   const clientServiceCounts: Record<string, number> = {}
   allServices.forEach(svc => {
     const clientId = svc.vehicles?.client_id
@@ -78,12 +77,33 @@ export default async function StaffDashboard() {
   const regularClients = counts.filter(c => c >= 2 && c <= 4).length
   const loyalClients = counts.filter(c => c >= 5).length
 
+  const priorityDueClients = dueServices.filter(svc => {
+    const clientId = svc.vehicles?.client_id ?? ''
+    const count = clientServiceCounts[clientId] ?? 1
+    return count === 1
+  })
+
   return (
     <div>
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{ margin: 0, color: '#1C3A5E', fontSize: '22px' }}>Staff Dashboard</h1>
         <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '13px' }}>Welcome, {user.email}</p>
       </div>
+
+      {/* Priority Alert Banner */}
+      {priorityDueClients.length > 0 && (
+        <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '12px', padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontSize: '20px' }}>🚨</span>
+          <div>
+            <p style={{ margin: 0, fontSize: '14px', fontWeight: '500', color: '#991B1B' }}>
+              {priorityDueClients.length} priority new client{priorityDueClients.length > 1 ? 's' : ''} with due service!
+            </p>
+            <p style={{ margin: '2px 0 0', fontSize: '12px', color: '#B91C1C' }}>
+              New clients are visiting for the first time — give them priority attention to build loyalty.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginBottom: '1.5rem' }}>
@@ -106,7 +126,7 @@ export default async function StaffDashboard() {
           <div style={{ background: '#DCFCE7', borderRadius: '12px', padding: '1.25rem', border: '1px solid #BBF7D0' }}>
             <p style={{ margin: 0, fontSize: '12px', color: '#166534', fontWeight: '500' }}>🆕 New Clients</p>
             <p style={{ margin: '6px 0 4px', fontSize: '28px', fontWeight: '600', color: '#166534', lineHeight: 1 }}>{newClients}</p>
-            <p style={{ margin: 0, fontSize: '11px', color: '#166534', opacity: 0.8 }}>1 service visit</p>
+            <p style={{ margin: 0, fontSize: '11px', color: '#166534', opacity: 0.8 }}>1 service visit · priority</p>
           </div>
           <div style={{ background: '#DBEAFE', borderRadius: '12px', padding: '1.25rem', border: '1px solid #BFDBFE' }}>
             <p style={{ margin: 0, fontSize: '12px', color: '#1E40AF', fontWeight: '500' }}>🔄 Regular Clients</p>
@@ -137,7 +157,7 @@ export default async function StaffDashboard() {
             <thead>
               <tr style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
                 <th style={{ padding: '12px 16px', textAlign: 'left', color: '#374151', fontWeight: '500' }}>Client</th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', color: '#374151', fontWeight: '500' }}>Status</th>
+                <th style={{ padding: '12px 16px', textAlign: 'left', color: '#374151', fontWeight: '500' }}>Classification</th>
                 <th style={{ padding: '12px 16px', textAlign: 'left', color: '#374151', fontWeight: '500' }}>Vehicle</th>
                 <th style={{ padding: '12px 16px', textAlign: 'left', color: '#374151', fontWeight: '500' }}>Service</th>
                 <th style={{ padding: '12px 16px', textAlign: 'left', color: '#374151', fontWeight: '500' }}>Due Date</th>
@@ -159,9 +179,17 @@ export default async function StaffDashboard() {
                 const badge = getClientBadge(serviceCount)
 
                 return (
-                  <tr key={svc.id} style={{ borderBottom: isLast ? 'none' : '1px solid #f3f4f6' }}>
+                  <tr key={svc.id} style={{
+                    borderBottom: isLast ? 'none' : '1px solid #f3f4f6',
+                    background: badge.isNew ? '#FFF7F7' : 'white',
+                  }}>
                     <td style={{ padding: '12px 16px', color: '#111827', fontWeight: '500' }}>
                       {vehicle?.clients?.full_name ?? '—'}
+                      {badge.isNew && (
+                        <span style={{ marginLeft: '8px', background: '#DC2626', color: 'white', fontSize: '10px', padding: '1px 6px', borderRadius: '99px', fontWeight: '600' }}>
+                          PRIORITY
+                        </span>
+                      )}
                     </td>
                     <td style={{ padding: '12px 16px' }}>
                       <span style={{ background: badge.bg, color: badge.color, padding: '2px 10px', borderRadius: '99px', fontSize: '11px', fontWeight: '500' }}>
