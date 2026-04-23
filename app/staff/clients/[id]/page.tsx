@@ -1,5 +1,5 @@
 import { createClient as createAdmin } from '@supabase/supabase-js'
-import { createClient } from '../../../../../lib/supabase-server'
+import { createClient } from '../../../../lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
@@ -33,7 +33,7 @@ type Client = {
   created_at: string
 }
 
-export default async function ManagerClientDetailPage({
+export default async function StaffClientDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>
@@ -55,7 +55,7 @@ export default async function ManagerClientDetailPage({
     .eq('id', id)
     .single()
 
-  if (!client) redirect('/manager/clients')
+  if (!client) redirect('/staff/clients')
 
   const { data: vehicles } = await admin
     .from('vehicles')
@@ -72,21 +72,29 @@ export default async function ManagerClientDetailPage({
   const typedVehicles = (vehicles ?? []) as Vehicle[]
   const typedServices = (services ?? []) as Service[]
 
+  // Check if staff can edit this client (created by them within 24h)
+  const now = new Date().getTime()
+  const canEdit =
+    client.created_by === user.id &&
+    new Date(client.created_at).getTime() > now - 86400000
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <Link href="/manager/clients" style={{ color: '#6b7280', fontSize: '13px', textDecoration: 'none' }}>
+        <Link href="/staff/clients" style={{ color: '#6b7280', fontSize: '13px', textDecoration: 'none' }}>
           ← Back to Clients
         </Link>
         <div style={{ display: 'flex', gap: '10px' }}>
+          {canEdit && (
+            <Link
+              href={`/staff/clients/${id}/edit`}
+              style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #1C3A5E', color: '#1C3A5E', fontSize: '13px', textDecoration: 'none' }}
+            >
+              Edit Client
+            </Link>
+          )}
           <Link
-            href={`/manager/clients/${id}/edit`}
-            style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #1C3A5E', color: '#1C3A5E', fontSize: '13px', textDecoration: 'none' }}
-          >
-            Edit Client
-          </Link>
-          <Link
-            href={`/manager/clients/${id}/service/new`}
+            href={`/staff/clients/${id}/service/new`}
             style={{ padding: '8px 16px', borderRadius: '8px', background: '#1C3A5E', color: 'white', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}
           >
             + Log Service
@@ -138,7 +146,7 @@ export default async function ManagerClientDetailPage({
         {typedServices.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
             <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>No services logged yet.</p>
-            <Link href={`/manager/clients/${id}/service/new`} style={{ display: 'inline-block', marginTop: '8px', color: '#1C3A5E', fontSize: '13px' }}>
+            <Link href={`/staff/clients/${id}/service/new`} style={{ display: 'inline-block', marginTop: '8px', color: '#1C3A5E', fontSize: '13px' }}>
               Log the first service →
             </Link>
           </div>

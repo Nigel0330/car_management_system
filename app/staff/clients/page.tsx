@@ -101,8 +101,10 @@ export default async function StaffClientsPage({
                   {plate ? `No clients found with plate matching "${plate}"` : 'No clients yet'}
                 </td>
               </tr>
-            ) : clients.map((client, i) => {
-              const canEdit = client.created_by === user.id && new Date(client.created_at).getTime() > new Date().getTime() - 86400000
+            ) : (() => {
+              const now = new Date().getTime()
+              return clients.map((client, i) => {
+              const canEdit = client.created_by === user.id && new Date(client.created_at).getTime() > now - 86400000
               const isLast = i === clients.length - 1
               return (
                 <tr key={client.id} style={{ borderBottom: isLast ? 'none' : '1px solid #f3f4f6' }}>
@@ -116,15 +118,32 @@ export default async function StaffClientsPage({
                   <td style={{ padding: '12px 16px', color: '#6b7280' }}>
                     {new Date(client.created_at).toLocaleDateString('en-PH')}
                   </td>
-                  <td style={{ padding: '12px 16px' }}>
-                    {canEdit
-                      ? <a href={'/staff/clients/' + client.id + '/edit'} style={{ color: '#1C3A5E', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>Edit</a>
-                      : <span title="Edit window expired. Contact your manager." style={{ color: '#9ca3af', fontSize: '13px', cursor: 'not-allowed' }}>Edit</span>
-                    }
+                  <td style={{ padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <a
+                      href={`/staff/clients/${client.id}`}
+                      style={{ color: '#1C3A5E', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}
+                    >
+                      View
+                    </a>
+                    {canEdit ? (
+                      <a
+                        href={`/staff/clients/${client.id}/edit`}
+                        style={{ color: '#6b7280', fontSize: '13px', textDecoration: 'none' }}
+                      >
+                        Edit
+                      </a>
+                    ) : (
+                      <span
+                        title="Edit window expired. Contact your manager."
+                        style={{ color: '#d1d5db', fontSize: '13px', cursor: 'not-allowed' }}
+                      >
+                        Edit
+                      </span>
+                    )}
                   </td>
                 </tr>
               )
-            })}
+            })})()}
           </tbody>
         </table>
       </div>

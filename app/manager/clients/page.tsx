@@ -112,8 +112,17 @@ export default async function ManagerClientsPage({
                 <td style={{ padding: '12px 16px', color: '#6b7280' }}>
                   {new Date(client.created_at).toLocaleDateString('en-PH')}
                 </td>
-                <td style={{ padding: '12px 16px' }}>
-                  <a href={`/manager/clients/${client.id}/edit`} style={{ color: '#1C3A5E', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>
+                <td style={{ padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  <a
+                    href={`/manager/clients/${client.id}`}
+                    style={{ color: '#1C3A5E', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}
+                  >
+                    View
+                  </a>
+                  <a
+                    href={`/manager/clients/${client.id}/edit`}
+                    style={{ color: '#6b7280', fontSize: '13px', textDecoration: 'none' }}
+                  >
                     Edit
                   </a>
                 </td>
